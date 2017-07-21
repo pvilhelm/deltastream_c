@@ -18,43 +18,20 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="part_defs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="udp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dgram_sink.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dgram_wrapper.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tinycthread\source\tinycthread.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="node_tree.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClCompile Include="..\node_tree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Program Files\Python36\Lib\ceepy\src\asserts.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gen\test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gen\test_node_tree.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dstream.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="udp.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dgram_sink.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tinycthread\source\tinycthread.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="node_tree.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <None Include="test_node_tree.ct" />
   </ItemGroup>
 </Project>

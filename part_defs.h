@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "node.h"
 
 /* Define fundamental part */
 
