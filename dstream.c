@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "tinycthread\source\tinycthread.h"
+
 #include "udp.h"
 #include "dgram_sink.h"
 #include "dgram_wrapper.h"
-#include "tinycthread\source\tinycthread.h"
+#include "clock.h"
 
 
 int main(char argc, char argv[])
@@ -20,6 +22,8 @@ int main(char argc, char argv[])
         printf("Udp init error: %i\n", result);
         exit(EXIT_FAILURE);
     }
+    
+    printf("time: %llu \n", get_time_deci_ms());
 
     /*thrd_t sink_thread;
     thrd_create(&sink_thread, )*/

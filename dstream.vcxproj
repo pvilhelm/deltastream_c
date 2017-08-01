@@ -198,15 +198,18 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="clock.h" />
     <ClInclude Include="dgram_sink.h" />
     <ClInclude Include="dgram_wrapper.h" />
     <ClInclude Include="node.h" />
     <ClInclude Include="node_tree.h" />
+    <ClInclude Include="part.h" />
     <ClInclude Include="part_defs.h" />
     <ClInclude Include="tinycthread\source\tinycthread.h" />
     <ClInclude Include="udp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="clock.c" />
     <ClCompile Include="dgram_sink.c" />
     <ClCompile Include="dstream.c" />
     <ClCompile Include="node_tree.c" />

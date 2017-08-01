@@ -3,22 +3,37 @@
 
 #include "node_tree.h"
 
-static int test_node_add() {
-    tree_node_t root = {0};
-    node_t* n = calloc(1,sizeof(node_t));
-    //% add_child(&root, 0) == 0
-    //% add_child(0, n) == 0
-    
-    root.n = n;
-    n->ip = 10;
-    n->port = 5;
-    
-    node_t* tmp = calloc(1,sizeof(node_t));
-    tmp->ip = 20;
-    tmp->port = 10;
+static int test_node() {
+    tree_node_t* root = calloc(1,sizeof(tree_node_t));
+    node_t nodes[] = 
+    {
+        { .ip = 85, .port = 10 },
+        { .ip = 4, .port = 10 },
+        { .ip = 44, .port = 10 },
+        { .ip = 16, .port = 10 },
+        { .ip = 13, .port = 10 },
+        { .ip = 87, .port = 10 },
+        { .ip = 102, .port = 10 },
+        { .ip = 1, .port = 10 },
+        { .ip = 32, .port = 10 },
+        { .ip = 21, .port = 10 }
+    };
 
-    add_child(&root,tmp);
-    
+    for(int i = 0; i<sizeof(nodes)/sizeof(nodes[0]);i++)
+        add_child(root,&nodes[i]);
+
+    //% find_child(root,13,10) != 0
+
+    tree_node_t* rem = find_child(root,13,10);
+
+    //% remove_child(rem) == rem
+
+    free(rem);
+
+    //% find_child(root,13,10) == 0
+
+    //! int free_all_children()
+    //% free_all_children(root,0) == 9
     
     return 0; 
 }
