@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <stdint.h>
+#include <stddef.h>
 
 enum ELEMENT_TYPE {
     UDP_DGRM_TIMED = 1,
@@ -10,11 +11,20 @@ enum ELEMENT_TYPE {
     STREAM_INFO,
 };
 
+enum BROADCAST_TYPE {
+    UDPSOCKET_RELAY = 1,
+};
+
+enum BROADCAST_SUBTYPE {
+    UNDEFINED = 0,
+};
+
+#pragma pack(push,1) /* Set alignment to one byte */
 struct part_h {
     uint8_t protocol_version;
     uint8_t reserved;
     uint8_t broadcast_type;
-    uint8_t broadcast_subtype_sub_type; 
+    uint8_t broadcast_subtype; 
     uint64_t broadcast_id; 
     uint32_t part_data_size;
 };
@@ -31,3 +41,22 @@ struct part_element_UDP_timed_h {
     uint64_t birth_time;
     uint16_t data_length; 
 };
+
+struct chunk_h {
+    uint8_t version_nr[2];
+    uint64_t broadcast_id;
+    uint8_t type;
+    uint8_t subtype;
+    uint16_t chunks_for_part;
+    uint16_t chunk_nr;
+};
+
+struct generic_chunk {
+    struct chunk_h chunk_header;
+    uint16_t size;
+    uint8_t* data;
+};
+
+#pragma pack(pop) /* Restore default value of alignement */
+
+void make_part(size_t broadcast_id);

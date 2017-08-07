@@ -38,9 +38,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="test_node_tree.ct" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="test_cbuffer.ct" />
+    <None Include="test_node_tree.ct" />
   </ItemGroup>
 </Project>

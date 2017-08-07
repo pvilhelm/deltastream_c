@@ -200,6 +200,7 @@
   <ItemGroup>
     <ClInclude Include="cbuff.h" />
     <ClInclude Include="clock.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="dgram_sink.h" />
     <ClInclude Include="dgram_wrapper.h" />
     <ClInclude Include="node.h" />
@@ -210,11 +211,13 @@
     <ClInclude Include="udp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="broadcast.h" />
     <ClCompile Include="cbuff.c" />
     <ClCompile Include="clock.c" />
     <ClCompile Include="dgram_sink.c" />
     <ClCompile Include="dstream.c" />
     <ClCompile Include="node_tree.c" />
+    <ClCompile Include="part.c" />
     <ClCompile Include="tinycthread\source\tinycthread.c" />
     <ClCompile Include="udp.c" />
   </ItemGroup>

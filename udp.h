@@ -16,9 +16,9 @@
 #include "part_defs.h"
 #include "dgram_wrapper.h"
 
-int init_udp_socket(int port);
-int kill_udp_socket();
-int send_dgram(dgram_wrapper_t dgram); /* Send datagram to ip:port */
-int rx_dgram(dgram_wrapper_t* dgram);    /* Receive datagram on bound socket and own the returning data ptr */
+int init_udp_socket(int port, size_t index);
+int kill_udp_socket(size_t index);
+int send_dgram(struct dgram_wrapper *dgram, size_t index); /* Send datagram to ip:port */
+int rx_dgram(struct dgram_wrapper *dgram, size_t index);    /* Receive datagram on bound socket and own the returning data ptr */
 
 extern SOCKET udp_socket;

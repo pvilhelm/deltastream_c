@@ -2,23 +2,22 @@
 
 #include <stdlib.h>
 
-struct cbuff * new_cbuff(size_t size) {
+struct cbuff *new_cbuff(size_t size) {
     struct cbuff* b = calloc(1, sizeof (struct cbuff));
     b->mem_start = calloc(size, sizeof(void*));
     b->mem_end = b->mem_start+size;
     b->mem_size = size;  
 }
 
-void* get_element(struct cbuff * b, size_t i) {
-    if(!b->first)
+void *get_element(struct cbuff *b, size_t i) {
+    if(!b->first || b->n_elements < i + 1)
         return 0;
     size_t mem_i = (b->first - b->mem_start + i) % b->mem_size;
     return b->mem_start[mem_i];
 }
 
-void* put_element(struct cbuff * b, void * el) {
+void *put_element(struct cbuff *b, void *el) {
     
-
     if (!b->first) { /* If buffer is empty */
         b->mem_start[0] = el;
         b->first = b->mem_start;
@@ -41,11 +40,11 @@ void* put_element(struct cbuff * b, void * el) {
     }
 }
 
-void* pull_element(struct cbuff * b) {
+void *pull_element(struct cbuff *b) {
     if (!b->first)
         return 0;
     
-    void* ret = *b->first; /* Return first element */
+    void *ret = *b->first; /* Return first element */
 
     --b->n_elements; 
 
@@ -58,11 +57,11 @@ void* pull_element(struct cbuff * b) {
     return ret;
 }
 
-int is_full(struct cbuff * b) {
+int is_full(struct cbuff *b) {
     return b->n_elements == b->mem_size;
 }
 
-void free_cbuff(struct cbuff* b) {
+void free_cbuff(struct cbuff *b) {
     free(b->mem_start);
     free(b);
 }

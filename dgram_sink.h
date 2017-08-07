@@ -5,4 +5,4 @@
 
 #include "dgram_wrapper.h"
 
-void process_dgram(dgram_wrapper_t dgram);
+void process_dgram(struct dgram_wrapper *dgram, size_t broadcast_index);
