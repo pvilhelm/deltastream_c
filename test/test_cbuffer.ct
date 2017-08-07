@@ -1,0 +1,47 @@
+#include <stdlib.h>
+
+#include "cbuff.h"
+
+
+static int test_cbuff() {
+    /* Add 6 ascending integers and check they are in order */
+    {
+        int arr[] = {0,1,2,3,4,5};
+
+        struct cbuff* b = new_cbuff(6);
+
+        
+        for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+            put_element(b, arr + i);
+
+        for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++) {
+            int* ans = get_element(b, i);
+            //%  *ans == arr[i]
+        }
+
+        for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++) {
+            int* ans = pull_element(b);
+            //%  *ans == arr[i]
+            //% b->n_elements == sizeof(arr) / sizeof(arr[0]) - i - 1
+        }
+        free_cbuff(&b);
+    }
+    /* Add more integer and overwrite old values and check */
+    {
+        int arr[] = { 0,1,2,3,4,5,6,7,8 };
+        int arr_ans[] = { 4,5,6,7,8};
+        struct cbuff* b = new_cbuff(5);
+        /* Add 6 ascending integers to wrap */
+        for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
+            put_element(b, arr + i);
+        for (int i = 0; i < 5; i++) {
+            int* ans = pull_element(b);
+            //%  *ans == arr_ans[i]
+            //% b->n_elements == 4 - i
+        }
+        //% pull_element(b) == 0
+        free_cbuff(&b);
+
+    }
+    return 0; 
+}

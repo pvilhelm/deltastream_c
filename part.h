@@ -10,7 +10,7 @@ enum ELEMENT_TYPE {
     STREAM_INFO,
 };
 
-struct part_header {
+struct part_h {
     uint8_t protocol_version;
     uint8_t reserved;
     uint8_t broadcast_type;
@@ -19,9 +19,15 @@ struct part_header {
     uint32_t part_data_size;
 };
 
-struct part_element_header {
+struct part_element_h {
     uint8_t element_type;
     uint8_t element_subtype;
     uint32_t element_size;  
 };
 
+struct part_element_UDP_timed_h {
+    uint16_t src_port;
+    uint16_t trgt_port;
+    uint64_t birth_time;
+    uint16_t data_length; 
+};

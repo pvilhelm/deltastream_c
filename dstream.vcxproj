@@ -198,6 +198,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="cbuff.h" />
     <ClInclude Include="clock.h" />
     <ClInclude Include="dgram_sink.h" />
     <ClInclude Include="dgram_wrapper.h" />
@@ -209,6 +210,7 @@
     <ClInclude Include="udp.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="cbuff.c" />
     <ClCompile Include="clock.c" />
     <ClCompile Include="dgram_sink.c" />
     <ClCompile Include="dstream.c" />

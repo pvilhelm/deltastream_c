@@ -10,7 +10,7 @@
 #include "dgram_sink.h"
 #include "dgram_wrapper.h"
 #include "clock.h"
-
+#include "cbuff.h"
 
 int main(char argc, char argv[])
 {
@@ -27,6 +27,8 @@ int main(char argc, char argv[])
 
     /*thrd_t sink_thread;
     thrd_create(&sink_thread, )*/
+
+    struct cbuff* part_buffer = new_cbuff(100);
 
     int errn;
     do{
@@ -49,6 +51,8 @@ int main(char argc, char argv[])
 
     } while (!errn);
     
+    free_cbuff(part_buffer), part_buffer = 0;
+
     return 0;
 }
 

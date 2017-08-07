@@ -45,6 +45,9 @@
     <ClInclude Include="part.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cbuff.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dstream.c">
@@ -63,6 +66,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="clock.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cbuff.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

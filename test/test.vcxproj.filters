@@ -30,8 +30,17 @@
     <ClCompile Include="gen\test_node_tree.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="gen\test_cbuffer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\cbuff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="test_node_tree.ct" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_cbuffer.ct" />
   </ItemGroup>
 </Project>

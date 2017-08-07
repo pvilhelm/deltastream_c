@@ -210,13 +210,20 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Program Files\Python36\Lib\ceepy\src\asserts.c" />
+    <ClCompile Include="..\cbuff.c" />
     <ClCompile Include="..\node_tree.c" />
     <ClCompile Include="gen\test.c" />
+    <ClCompile Include="gen\test_cbuffer.c" />
     <ClCompile Include="gen\test_node_tree.c" />
     <CustomBuild Include="test_node_tree.ct">
       <FileType>Document</FileType>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Test|x64'">false</ExcludedFromBuild>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_cbuffer.ct">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Test|x64'">true</ExcludedFromBuild>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
