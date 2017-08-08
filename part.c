@@ -47,27 +47,39 @@ void make_part(size_t broadcast_index) {
         size_t n;
         
         struct dgram_wrapper *dgw = pull_element(b_in_dgram);
+
         struct part_element_h peh = { 
             .element_type = UDP_DGRM_TIMED,
             .element_subtype = 0,
             .element_size = dgw->data_length + sizeof(struct part_element_UDP_timed_h) 
         };
+
         struct part_element_UDP_timed_h peuth = {
-            .src_port = htonh(dgw->port),
-            .trgt_port = htonh(dgw->local_port),
+            .src_port = htons(dgw->port),
+            .trgt_port = htons(dgw->local_port),
             .birth_time = htonll(dgw->time),
-            .data_length = htonh(dgw->data_length),
+            .data_length = htons(dgw->data_length),
         };
+
         n = sizeof(struct part_element_h);
         memcpy(el, &peh, n);
         el += n;
         n = sizeof(struct part_element_UDP_timed_h);
         memcpy(el, &peuth, n);
         el += n;
+
         /* Copy the data payload of the datagram */
         memcpy(el, dgw->data, dgw->data_length);
-        el += dgw->data_length; 
+        el += dgw->data_length;
         free(dgw->data);
         free(dgw);
     }
+
+    struct part *old_part = put_element(b_in_part, part);
+    if (old_part)
+        free(old_part);
+   
+#ifdef _DEBUG
+    printf("Part created with size %zu \n", part_size);
+#endif
 }

@@ -203,12 +203,14 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="dgram_sink.h" />
     <ClInclude Include="dgram_wrapper.h" />
+    <ClInclude Include="game_logic.h" />
     <ClInclude Include="node.h" />
     <ClInclude Include="node_tree.h" />
     <ClInclude Include="part.h" />
     <ClInclude Include="part_defs.h" />
     <ClInclude Include="tinycthread\source\tinycthread.h" />
     <ClInclude Include="udp.h" />
+    <ClInclude Include="udp_ext_server.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="broadcast.h" />
@@ -216,10 +218,13 @@
     <ClCompile Include="clock.c" />
     <ClCompile Include="dgram_sink.c" />
     <ClCompile Include="dstream.c" />
+    <ClCompile Include="game_logic.c" />
     <ClCompile Include="node_tree.c" />
     <ClCompile Include="part.c" />
+    <ClCompile Include="states.c" />
     <ClCompile Include="tinycthread\source\tinycthread.c" />
     <ClCompile Include="udp.c" />
+    <ClCompile Include="udp_ext_server.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

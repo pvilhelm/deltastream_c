@@ -51,12 +51,15 @@
     <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="udp_ext_server.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="game_logic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dstream.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="udp.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dgram_sink.c">
@@ -78,6 +81,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="broadcast.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="udp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="udp_ext_server.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game_logic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="states.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

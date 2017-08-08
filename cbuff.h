@@ -2,6 +2,8 @@
 
 #include <stddef.h>
 
+#include "tinycthread\source\tinycthread.h"
+
 /* Circular buffer of void pointers. If a element is added and the buffer 
  * is full then the oldest element is overwritten. 
  */
@@ -11,6 +13,7 @@ struct cbuff {
     size_t mem_size; /* mem_end - mem_start */
     void **first; /* "First" element */
     size_t n_elements; /* Number of added elements currently in buffer */
+    mtx_t *lock;
 };
 
 /* Create a new buffer of size size */

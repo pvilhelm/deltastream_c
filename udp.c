@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "udp.h"
 #include "clock.h"
 #include "config.h"
+#include "tinycthread\source\tinycthread.h"
 
 #define DEFAULT_RX_BUFFER_SIZE 1600
 #define DEFAULT_PORT 20000
@@ -12,8 +14,25 @@ SOCKET udp_socket[MAX_SIMULT_BROADCASTS*2]; /* Existing macro fucks up this */
 uint16_t local_port[MAX_SIMULT_BROADCASTS*2];
 
 static int inited;
+mtx_t glb_lock;
+//static mtx_t lcl_lock[];
+
+int init_udp_lock() {
+    return mtx_init(&glb_lock, mtx_plain);
+}
 
 int init_udp_socket(int port, size_t index) {
+
+    mtx_lock(&glb_lock);
+
+    if (index == SIZE_MAX) { /* Automatically choose index */
+        for (int i = 0; i < sizeof udp_socket; i++) {
+            if (udp_socket[i] == 0) {
+                index = i;
+                break; 
+            }
+        }
+    }
 
     printf("Initializing udp socket ... \n");
 
@@ -28,7 +47,7 @@ int init_udp_socket(int port, size_t index) {
         res = WSAStartup(MAKEWORD(2, 2), &wsaData);
         if (res != 0) {
             printf("WSAStartup failed with error: %d\n", res);
-            return 1;
+            return mtx_unlock(&glb_lock), -1;
         }
         inited = 1;
     } else { 
@@ -41,7 +60,7 @@ int init_udp_socket(int port, size_t index) {
         int errn = WSAGetLastError();
         printf("socket failed with error: %ld\n", errn); 
         WSACleanup();
-        return 1;
+        return mtx_unlock(&glb_lock), -1;
     }
 
     rx_address.sin_family = AF_INET;
@@ -55,19 +74,24 @@ int init_udp_socket(int port, size_t index) {
         printf("bind failed with error: %d\n", WSAGetLastError()); 
         closesocket((SOCKET)udp_socket[index]);
         WSACleanup();
-        return 1;
+        return mtx_unlock(&glb_lock), -1;
     }
 
+    local_port[index] = port; 
+
     printf("Udp socket initialized! \n");
-    return 0; 
+    return mtx_unlock(&glb_lock), index;
 }
 
 int kill_udp_socket(size_t index) {
+    mtx_lock(&glb_lock);
     printf("Closing udp socket ... \n");
     closesocket((SOCKET)udp_socket[index]);
+    udp_socket[index] = 0; 
+    local_port[index] = 0;
     if (!--inited)
-        return WSACleanup();
-    return 0;
+        return mtx_unlock(&glb_lock), WSACleanup();
+    return mtx_unlock(&glb_lock), 0;
 }
 
 int send_dgram(struct dgram_wrapper *dgram, size_t index)
