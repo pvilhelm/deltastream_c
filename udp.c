@@ -10,12 +10,11 @@
 #define DEFAULT_RX_BUFFER_SIZE 1600
 #define DEFAULT_PORT 20000
 
-SOCKET udp_socket[MAX_SIMULT_BROADCASTS*2]; /* Existing macro fucks up this */
-uint16_t local_port[MAX_SIMULT_BROADCASTS*2];
+static SOCKET udp_socket[MAX_SIMULT_BROADCASTS*3]; 
+static uint16_t local_port[MAX_SIMULT_BROADCASTS*3];
 
 static int inited;
-mtx_t glb_lock;
-//static mtx_t lcl_lock[];
+static mtx_t glb_lock;
 
 int init_udp_lock() {
     return mtx_init(&glb_lock, mtx_plain);
@@ -46,8 +45,8 @@ int init_udp_socket(int port, size_t index) {
         WSADATA wsaData;
         res = WSAStartup(MAKEWORD(2, 2), &wsaData);
         if (res != 0) {
-            printf("WSAStartup failed with error: %d\n", res);
-            return mtx_unlock(&glb_lock), -1;
+            fprintf(stderr, "WSAStartup failed with error: %d\n", res);
+            exit(EXIT_FAILURE);
         }
         inited = 1;
     } else { 
@@ -58,9 +57,9 @@ int init_udp_socket(int port, size_t index) {
     udp_socket[index] = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
     if (udp_socket[index] == INVALID_SOCKET) {
         int errn = WSAGetLastError();
-        printf("socket failed with error: %ld\n", errn); 
+        fprintf(stderr, "socket failed with error: %ld\n", errn);
         WSACleanup();
-        return mtx_unlock(&glb_lock), -1;
+        exit(EXIT_FAILURE);
     }
 
     rx_address.sin_family = AF_INET;
@@ -68,25 +67,33 @@ int init_udp_socket(int port, size_t index) {
     rx_address.sin_addr.s_addr = htonl(INADDR_ANY);
 
     /* Bind socket to any local ip */
-    res = bind((SOCKET)udp_socket[index], (SOCKADDR*) &rx_address, sizeof rx_address);
-
+    res = bind(udp_socket[index], (SOCKADDR*) &rx_address, sizeof rx_address);
     if (res == SOCKET_ERROR) {
-        printf("bind failed with error: %d\n", WSAGetLastError()); 
+        fprintf(stderr, "bind() failed with error: %d\n", WSAGetLastError());
         closesocket((SOCKET)udp_socket[index]);
         WSACleanup();
-        return mtx_unlock(&glb_lock), -1;
+        exit(EXIT_FAILURE);
     }
 
-    local_port[index] = port; 
+    struct sockaddr_in sa = {0}; 
+    int sa_len = sizeof(struct sockaddr_in);
+    if (getsockname(udp_socket[index], (struct sockaddr*)&sa, &sa_len)) {
+        fprintf(stderr, "getsockname() failed with error: %d\n", WSAGetLastError());
+        closesocket((SOCKET)udp_socket[index]);
+        WSACleanup();
+        exit(EXIT_FAILURE);
+    }
+    local_port[index] = ntohs(sa.sin_port); /* Store actual port */
 
-    printf("Udp socket initialized! \n");
-    return mtx_unlock(&glb_lock), index;
+    printf("UDP socket initialized:\n\tport: %u\n\tIP:%x\n", ntohs(sa.sin_port), sa.sin_addr.s_addr);
+
+    return mtx_unlock(&glb_lock), (int)index;
 }
 
 int kill_udp_socket(size_t index) {
     mtx_lock(&glb_lock);
     printf("Closing udp socket ... \n");
-    closesocket((SOCKET)udp_socket[index]);
+    closesocket(udp_socket[index]);
     udp_socket[index] = 0; 
     local_port[index] = 0;
     if (!--inited)
@@ -101,8 +108,10 @@ int send_dgram(struct dgram_wrapper *dgram, size_t index)
     dest.sin_addr.s_addr = htonl(dgram->remote_ip);
     dest.sin_port = htons(dgram->port);
 
-    int res = sendto((SOCKET)udp_socket[index], dgram->data, (int)dgram->data_length, 0, (SOCKADDR *)&dest, sizeof(dest));
-    
+    int res = sendto(udp_socket[index], dgram->data, (int)dgram->data_length, 0, (SOCKADDR *)&dest, sizeof(dest));
+    if (res == SOCKET_ERROR) {
+        printf("getsockname() failed with error: %d\n", WSAGetLastError());
+    }
     return res; 
 }
 

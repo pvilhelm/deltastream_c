@@ -1,5 +1,6 @@
 #include "cbuff.h"
 
+#include <stdio.h>
 #include <stdlib.h>
 
 struct cbuff *new_cbuff(size_t size) {

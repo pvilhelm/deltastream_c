@@ -4,7 +4,7 @@
 
 #include "dgram_wrapper.h"
 
-int process_ext_dgram(struct dgram_wrapper dgram, size_t index);
+int process_ext_dgram(struct dgram_wrapper *dgram, size_t index);
 
 int game_logic(int index);
 

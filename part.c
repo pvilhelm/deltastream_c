@@ -34,12 +34,12 @@ void make_part(size_t broadcast_index) {
     uint8_t *part = calloc(1, part_size);
 
     /* Make the part */
-    struct part_h *p_h = part;
+    struct part_h *p_h = (void*)part;
     p_h->protocol_version = DSTREAM_V;
     p_h->broadcast_type = b->broadcast_type;
     p_h->broadcast_subtype = b->broadcast_subtype;
     p_h->broadcast_id = htonll(b->broadcast_id);
-    p_h->part_data_size = part_size - sizeof(struct part_h);
+    p_h->part_data_size = (uint32_t) (part_size -  sizeof(struct part_h));
 
     size_t el_offset = sizeof(struct part_h);
     uint8_t *el = part + el_offset;
@@ -48,17 +48,17 @@ void make_part(size_t broadcast_index) {
         
         struct dgram_wrapper *dgw = pull_element(b_in_dgram);
 
-        struct part_element_h peh = { 
+        struct part_element_h peh = {
             .element_type = UDP_DGRM_TIMED,
             .element_subtype = 0,
-            .element_size = dgw->data_length + sizeof(struct part_element_UDP_timed_h) 
+            .element_size = (uint32_t)(dgw->data_length + sizeof(struct part_element_UDP_timed_h)),
         };
 
         struct part_element_UDP_timed_h peuth = {
             .src_port = htons(dgw->port),
             .trgt_port = htons(dgw->local_port),
             .birth_time = htonll(dgw->time),
-            .data_length = htons(dgw->data_length),
+            .data_length = htons((uint16_t)dgw->data_length),
         };
 
         n = sizeof(struct part_element_h);
@@ -78,8 +78,4 @@ void make_part(size_t broadcast_index) {
     struct part *old_part = put_element(b_in_part, part);
     if (old_part)
         free(old_part);
-   
-#ifdef _DEBUG
-    printf("Part created with size %zu \n", part_size);
-#endif
 }

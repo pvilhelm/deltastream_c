@@ -15,6 +15,6 @@ int game_logic(int index) {
     return 0;
 }
 
-int process_ext_dgram(struct dgram_wrapper dgram, size_t index) {
+int process_ext_dgram(struct dgram_wrapper *dgram, size_t index) {
     return 0;
 }

@@ -20,5 +20,5 @@ int init_udp_socket(int port, size_t index);
 int kill_udp_socket(size_t index);
 int send_dgram(struct dgram_wrapper *dgram, size_t index); /* Send datagram to ip:port */
 int rx_dgram(struct dgram_wrapper *dgram, size_t index);    /* Receive datagram on bound socket and own the returning data ptr */
+int init_udp_lock();
 
-extern SOCKET udp_socket[];
