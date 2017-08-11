@@ -8,22 +8,20 @@
 #define NTREE_NODE_EXISTS 1
 #define NTREE_NODE_DOESNT_EXIST 2
 
-/* Convenience macro to cast ip and port field of node_t to a uint64 key */
 
+struct tree_node;
 
-typedef struct tree_node tree_node_t;
-
-typedef struct tree_node {
-    tree_node_t* n_p;    /* Parent node */
-    tree_node_t* n_r;    /* Higher ip:port */
-    tree_node_t* n_l;    /* Lower ip:port */
+struct tree_node {
+    struct tree_node* n_p;    /* Parent node */
+    struct tree_node* n_r;    /* Higher ip:port */
+    struct tree_node* n_l;    /* Lower ip:port */
     node_t* n;      /* This node */
-} tree_node_t;
+};
 
-tree_node_t* add_child(tree_node_t* root, node_t* n);
-tree_node_t* remove_child(tree_node_t* n);
-tree_node_t* find_child(tree_node_t* root, uint32_t ip, uint16_t port);
+struct tree_node *add_child(struct tree_node* root, node_t* n);
+struct tree_node *remove_child(struct tree_node* n);
+struct tree_node *find_child(struct tree_node* root, uint32_t ip, uint16_t port);
 
-int free_all_children(tree_node_t* root, int free_nodes);
-int remove_and_free_child(tree_node_t* root, node_t* child);
+int free_all_children(struct tree_node* root, int free_nodes);
+int remove_and_free_child(struct tree_node* root, node_t* child);
 uint64_t key(node_t* n);

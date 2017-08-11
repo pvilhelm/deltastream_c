@@ -4,7 +4,7 @@
 #include "node_tree.h"
 
 static int test_node() {
-    tree_node_t* root = calloc(1,sizeof(tree_node_t));
+    struct node_tree* root = calloc(1,sizeof(struct tree_node));
     node_t nodes[] = 
     {
         { .ip = 85, .port = 10 },
@@ -24,7 +24,7 @@ static int test_node() {
 
     //% find_child(root,13,10) != 0
 
-    tree_node_t* rem = find_child(root,13,10);
+    struct node_tree *rem = find_child(root,13,10);
 
     //% remove_child(rem) == rem
 

@@ -219,6 +219,7 @@
     <ClCompile Include="..\..\..\Program Files\Python36\Lib\ceepy\src\asserts.c" />
     <ClCompile Include="..\cbuff.c" />
     <ClCompile Include="..\node_tree.c" />
+    <ClCompile Include="..\tinycthread\source\tinycthread.c" />
     <ClCompile Include="gen\test.c" />
     <ClCompile Include="gen\test_cbuffer.c" />
     <ClCompile Include="gen\test_node_tree.c" />

@@ -17,7 +17,7 @@ extern int terminate_program;
 
 int udp_ext_tx_server_thrd(void* arg) {
     
-    size_t index = (size_t)arg; 
+    size_t index = (size_t)arg * 3 + 1; 
 
     int ret = init_udp_socket(0, index);
     if (ret < 0) {
@@ -46,7 +46,7 @@ int udp_ext_tx_server_thrd(void* arg) {
 }
 
 int udp_ext_rx_server_thrd(void* arg) {
-    size_t index = (size_t)arg; /* Using ptr value as int argument to avoid races ... */
+    size_t index = (size_t)arg * 3 + 2; /* Using ptr value as int argument to avoid races ... */
 
     int ans = init_udp_socket(0, index);
     if (ans < 0)

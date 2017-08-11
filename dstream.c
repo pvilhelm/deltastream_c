@@ -16,6 +16,7 @@
 #include "part.h"
 #include "broadcast.h"
 #include "udp_ext_server.h"
+#include "node_tree.h"
 
 extern struct cbuff *in_dgram_cbuff[];
 extern struct cbuff *in_part_cbuff[];
@@ -24,10 +25,11 @@ extern mtx_t *tx_buffer_sig_mtx;
 extern cnd_t *tx_buffer_sig;
 extern struct cbuff *send_buffer;
 extern int terminate_program;
+extern struct node_tree *arr_node_tree[];
 
  
 int instream_thrd(size_t *ptr_index) {
-    size_t index = (size_t)ptr_index; 
+    size_t index = (size_t)ptr_index * 3; 
 
     int result = init_udp_socket(11111, index);
     if (result < 0) {
@@ -71,7 +73,7 @@ int instream_thrd(size_t *ptr_index) {
 }
 
 int part_thread(void* arg) {
-    size_t index = (size_t)arg; 
+    size_t index = (size_t)arg * 3; 
 
     uint64_t start_time = get_time_deci_ms();
     uint64_t time_last_part = start_time;
@@ -96,10 +98,7 @@ int main(char argc, char argv[])
 {
     /*if (argc != 1)
         exit(-1);*/
-    size_t socket_index_rx_thrd = 0;
-    size_t socket_index_ext_tx_thrd = 1;
-    size_t socket_index_ext_rx_thrd = 2; 
-    size_t broadcast_index = 0; 
+    size_t broadcast_index = 0;
 
     /* Init udp config mutex */
     init_udp_lock();
@@ -131,17 +130,21 @@ int main(char argc, char argv[])
     bcast[0]->broadcast_id += (uint64_t)rand() << 32;
     bcast[0]->broadcast_id += (uint64_t)rand() << 48;
     bcast[0]->broadcast_type = UDPSOCKET_RELAY;
-    
+
+    /* Setup node_tree */
+    for (int i = 0; i < 1; i++) {
+        arr_node_tree[i] = calloc(1, sizeof(struct tree_node));
+    }
         
     /* Start threads */    
     thrd_t source_udp_input_thrd;
-    thrd_create(&source_udp_input_thrd, instream_thrd, (void*)socket_index_rx_thrd);
+    thrd_create(&source_udp_input_thrd, instream_thrd, (void*)broadcast_index);
 
     thrd_t ext_udp_tx_thrd;
-    thrd_create(&ext_udp_tx_thrd, udp_ext_tx_server_thrd, (void*)socket_index_ext_tx_thrd);
+    thrd_create(&ext_udp_tx_thrd, udp_ext_tx_server_thrd, (void*)broadcast_index);
     
     thrd_t ext_udp_rx_thrd;
-    thrd_create(&ext_udp_rx_thrd, udp_ext_rx_server_thrd, (void*)socket_index_ext_rx_thrd);
+    thrd_create(&ext_udp_rx_thrd, udp_ext_rx_server_thrd, (void*)broadcast_index);
 
     /* Make parts in main thread */
     thrd_t source_part_thrd;

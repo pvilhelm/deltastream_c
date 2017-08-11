@@ -3,12 +3,12 @@
 #include "node_tree.h"
 #include <string.h>
 
-tree_node_t * add_child(tree_node_t * root, node_t * n)
+struct tree_node *add_child(struct tree_node *root, node_t *n)
 {
     if(!root || !n) /* Invalid input */
         return 0;
 
-    tree_node_t* c_n = root; /* Current_Node */
+    struct tree_node* c_n = root; /* Current_Node */
 
     if(!c_n->n){
         c_n->n = n;
@@ -22,7 +22,7 @@ tree_node_t * add_child(tree_node_t * root, node_t * n)
             if (c_n->n_r) {/* Right child exists*/
                 c_n = c_n->n_r;
             } else { /* Else make a wrapper and add n to it */
-                c_n->n_r = calloc(1,sizeof(tree_node_t));
+                c_n->n_r = calloc(1,sizeof(struct tree_node));
                 c_n->n_r->n = n;
                 c_n->n_r->n_p = c_n;
                 return c_n->n_r;
@@ -31,7 +31,7 @@ tree_node_t * add_child(tree_node_t * root, node_t * n)
             if (c_n->n_l) { /* Left child exists */
                 c_n = c_n->n_l;
             } else { /* Else make a wrapper and add n to it */
-                c_n->n_l = calloc(1, sizeof(tree_node_t));
+                c_n->n_l = calloc(1, sizeof(struct tree_node));
                 c_n->n_l->n = n;
                 c_n->n_l->n_p = c_n;
                 return c_n->n_l;
@@ -41,13 +41,13 @@ tree_node_t * add_child(tree_node_t * root, node_t * n)
     return 0;
 }
 
-uint64_t key(node_t* n) {
-    return ( (uint64_t) n->ip << 16)+n->port;
+uint64_t key(node_t *n) {
+    return ( (uint64_t) n->ip << 16) + n->port;
 }
 
-tree_node_t* remove_child(tree_node_t* n)
+struct tree_node *remove_child(struct tree_node *n)
 {
-    tree_node_t* c_n = n;
+    struct tree_node* c_n = n;
 
     if(!n)
         return 0;
@@ -77,8 +77,8 @@ tree_node_t* remove_child(tree_node_t* n)
             c_n->n_r->n_p = c_n->n_p;
             return c_n;
         } else { /* Current node is root */
-            tree_node_t* ret_n = malloc(sizeof(tree_node_t));
-            memcpy(ret_n, c_n, sizeof(tree_node_t));
+            struct tree_node* ret_n = malloc(sizeof(struct tree_node));
+            memcpy(ret_n, c_n, sizeof(struct tree_node));
             ret_n->n_r = c_n;
             c_n->n_l = c_n->n_r->n_l;
             c_n->n_r = c_n->n_r->n_r;
@@ -98,8 +98,8 @@ tree_node_t* remove_child(tree_node_t* n)
             c_n->n_l->n_p = c_n->n_p;
             return c_n;
         } else { /* Current node is root */
-            tree_node_t* ret_n = malloc(sizeof (tree_node_t));
-            memcpy(ret_n,c_n,sizeof(tree_node_t));
+            struct tree_node* ret_n = malloc(sizeof (struct tree_node));
+            memcpy(ret_n,c_n,sizeof(struct tree_node));
             ret_n->n_l = c_n;
             c_n->n_l = c_n->n_l->n_l;
             c_n->n_r = c_n->n_l->n_r;
@@ -109,7 +109,7 @@ tree_node_t* remove_child(tree_node_t* n)
         }
     } else { /* Node has two children */
         /* Find leftest node on the right */
-        tree_node_t* n_min = c_n->n_r;
+        struct tree_node* n_min = c_n->n_r;
         while (1) {
             if(n_min->n_l)
                 n_min = n_min->n_l;
@@ -132,20 +132,20 @@ tree_node_t* remove_child(tree_node_t* n)
             /* Set parent of children of current node to leftest node */
             return c_n;
         } else {
-            tree_node_t* ret_n = malloc(sizeof(tree_node_t));
-            memcpy(ret_n, c_n, sizeof(tree_node_t));
+            struct tree_node* ret_n = malloc(sizeof(struct tree_node));
+            memcpy(ret_n, c_n, sizeof(struct tree_node));
             c_n->n = n_min->n;
             return ret_n;          
         }
     }
 }
 
-tree_node_t * find_child(tree_node_t * root, uint32_t ip, uint16_t port)
+struct tree_node *find_child(struct tree_node *root, uint32_t ip, uint16_t port)
 {
     /* Make a target key from ip and port */
     uint64_t k = (((uint64_t) ip << 16) + port);
 
-    tree_node_t* c_n = root; /* Current_Node */
+    struct tree_node* c_n = root; /* Current_Node */
     while (c_n) {
         if (key(c_n->n) == k)
             return c_n; /* This node is the node */
@@ -158,10 +158,10 @@ tree_node_t * find_child(tree_node_t * root, uint32_t ip, uint16_t port)
     return 0; /* No such child exists */
 }
 
-int free_all_children(tree_node_t * root, int free_nodes)
+int free_all_children(struct tree_node *root, int free_nodes)
 {
     int freed_children = 0;
-    tree_node_t* c_n = root; 
+    struct tree_node *c_n = root; 
     while (c_n) {
         if(c_n->n_r){
             c_n = c_n->n_r;
@@ -177,7 +177,7 @@ int free_all_children(tree_node_t * root, int free_nodes)
                     c_n->n_p->n_r = 0;
                 if(free_nodes)
                     free(c_n->n);
-                tree_node_t* p_n = c_n->n_p;
+                struct tree_node* p_n = c_n->n_p;
                 free(c_n);
                 freed_children++;
                 c_n = p_n;
@@ -195,16 +195,13 @@ int free_all_children(tree_node_t * root, int free_nodes)
     return freed_children;
 }
 
-int remove_and_free_child(tree_node_t * root, node_t * child)
+int remove_and_free_child(struct tree_node *root, node_t *child)
 {
-    tree_node_t* rem = find_child(root, child->ip, child->port);
-    remove_child(rem);
-    free(rem->n_l);
-    free(rem->n_p);
-    free(rem->n_r);
-    free(rem);
-    if(rem)
-        return 0;
-    else
+    struct tree_node *rem = find_child(root, child->ip, child->port);
+    if (rem) {
+        remove_child(rem);
+        free(rem);
         return 1;
+    } else
+        return 0;
 }
