@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 
+#include "cbuff.h"
+
 /* Define node */
 
 #define NODE_STATE_ACTIVE 1U
@@ -19,6 +21,10 @@ typedef struct node {
     uint64_t uled_parts_to_him;
     int64_t balance;                /* His debt minus my debt to him*/
     int8_t rating;                    /* Normalized rating of node */
-    uint64_t last_seen;                
+    uint64_t last_seen;       
+    float ping;
+    /* States that need buffers */
+    struct cbuff *cb_ping_exchange;
+    
 } node_t;
 

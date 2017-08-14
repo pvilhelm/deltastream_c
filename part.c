@@ -12,12 +12,12 @@
 
 extern struct cbuff *in_dgram_cbuff[];
 extern struct cbuff *in_part_cbuff[];
-extern struct broadcast *bcast[];
+extern struct broadcast bcast[];
 
 void make_part(size_t broadcast_index) {
     struct cbuff *b_in_dgram = in_dgram_cbuff[broadcast_index];
     struct cbuff *b_in_part = in_part_cbuff[broadcast_index];
-    struct broadcast *b = bcast[broadcast_index];
+    struct broadcast *b = &bcast[broadcast_index];
 
     size_t n_dgrams = b_in_dgram->n_elements;
 

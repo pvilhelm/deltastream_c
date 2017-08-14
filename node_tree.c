@@ -146,6 +146,8 @@ struct tree_node *find_child(struct tree_node *root, uint32_t ip, uint16_t port)
     uint64_t k = (((uint64_t) ip << 16) + port);
 
     struct tree_node* c_n = root; /* Current_Node */
+    if (!c_n->n) /* Empty tree */
+        return 0; 
     while (c_n) {
         if (key(c_n->n) == k)
             return c_n; /* This node is the node */

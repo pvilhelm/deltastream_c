@@ -72,9 +72,9 @@ struct part_element_UDP_timed_h {
  * A chunk is a generic message sent between nodes that cointans data, control data etc. 
  */
 struct chunk_h {
-    
     uint64_t broadcast_id; ///< The id of the broadcast
-    uint8_t version_nr[2]; ///< Version number of the senders Deltastream implimentation 
+    uint8_t version_nr; ///< Version number of the senders Deltastream implimentation 
+    uint8_t config; ///< Configuration bits for the cunk
 };
 
 /**
@@ -84,7 +84,11 @@ struct chunk_h {
 enum cunk_types {
     CHUNK_TYPE_INVALID = 0,
     CHUNK_TYPE_CHUNKS, ///< The chunk that contains chunks split over multiple chunks
-    CHUNK_TYPE_PING, ///< A ping control message
+    CHUNK_TYPE_PING, ///< A ping 
+    CHUNK_TYPE_PART_BID, ///< A bid on part(s) 
+    CHUNK_TYPE_PART_BID_CONFIRM, ///< A confirmation of a previospeus bid
+    CHUNK_TYPE_PART_LIST, ///< A list of parts in the senders possetion
+    CHUNK_TYPE_NODE_LIST, ///< A list of nodes in the broadcast 
 };
 
 /**
@@ -92,7 +96,6 @@ enum cunk_types {
  */
 struct chunk_sub_h {
     uint8_t type; ///< The main type of the chunk 
-    uint8_t subtype; ///< The subtype of the chunk
     uint16_t size; ///< The size of the element
 };
 
@@ -110,6 +113,11 @@ struct generic_chunk {
     struct chunk_h chunk_header;
     uint16_t size;
     uint8_t* data;
+};
+
+struct chunk_el_ping {
+    uint8_t ping_i; ///< The i:th ping in the series of pings. Increased by one each transmission. 
+    uint8_t ping_final; ///< The final value of #ping_i
 };
 
 #pragma pack(pop) /* Restore default value of alignement */

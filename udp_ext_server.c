@@ -46,20 +46,21 @@ int udp_ext_tx_server_thrd(void* arg) {
 }
 
 int udp_ext_rx_server_thrd(void* arg) {
-    size_t index = (size_t)arg * 3 + 2; /* Using ptr value as int argument to avoid races ... */
+    size_t bcast_index = (size_t)arg; 
+    size_t socket_index = (size_t)arg * 3 + 2; /* Using ptr value as int argument to avoid races ... */
 
-    int ans = init_udp_socket(0, index);
+    int ans = init_udp_socket(0, socket_index);
     if (ans < 0)
         return ans;
     else
-        index = ans; 
+        socket_index = ans;
 
     
     while(!terminate_program) {
         struct dgram_wrapper *dgram = calloc(1, sizeof(struct dgram_wrapper));
 
         int errn;
-        if (errn = rx_dgram(dgram, index))
+        if (errn = rx_dgram(dgram, socket_index))
             goto err;
 
         uint64_t now = get_time_deci_ms();
@@ -72,7 +73,9 @@ int udp_ext_rx_server_thrd(void* arg) {
         if (dgram->data_length && dgram->data[dgram->data_length - 1] == 0)
             printf("        data:\n%s\n", dgram->data);*/
 
-        process_ext_dgram(dgram, index);
+        process_ext_dgram(dgram, bcast_index);
+        free(dgram->data);
+        free(dgram);
 
         continue;
 
@@ -86,7 +89,7 @@ int udp_ext_rx_server_thrd(void* arg) {
     printf("Exiting udp_ext_rx_server_thrd\n");
 #endif
 
-    kill_udp_socket(index);
+    kill_udp_socket(socket_index);
 
     return 0;
 }

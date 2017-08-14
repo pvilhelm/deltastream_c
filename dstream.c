@@ -1,6 +1,21 @@
 // dstream.cpp : Defines the entry point for the console application.
 //
 
+/**
+ * \mainpage Delstastream
+ *
+ * Deltastream is a protocol for distributed stream distribution, with the goal to 
+ * minimize the load on the source node in the network. 
+ *
+ * \author Petter Tomner
+ */
+
+/** \file
+ * Entry point of the program.
+ *
+ * \author Petter Tomner
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -17,19 +32,29 @@
 #include "broadcast.h"
 #include "udp_ext_server.h"
 #include "node_tree.h"
+#include "game_logic.h"
 
 extern struct cbuff *in_dgram_cbuff[];
 extern struct cbuff *in_part_cbuff[];
-extern struct broadcast *bcast[];
+extern struct broadcast bcast[];
 extern mtx_t *tx_buffer_sig_mtx;
 extern cnd_t *tx_buffer_sig;
 extern struct cbuff *send_buffer;
 extern int terminate_program;
 extern struct node_tree *arr_node_tree[];
 
- 
-int instream_thrd(size_t *ptr_index) {
-    size_t index = (size_t)ptr_index * 3; 
+/**
+ * @brief Source stream input thread.
+ *
+ * The thread waits for incoming datagrams from the source and 
+ * wraps them in a dgram_wrapper and stores them in a circular buffer.
+ * The buffer is then emptied periodically by the #part_thread of the 
+ * correnspoding broadcast. 
+ *
+ * \param[in] bcast_index Index of the broadcast. Casted to size_t from void*. 
+ */ 
+int instream_thrd(void *bcast_index) {
+    size_t index = (size_t)bcast_index * 3;
 
     int result = init_udp_socket(11111, index);
     if (result < 0) {
@@ -72,6 +97,14 @@ int instream_thrd(size_t *ptr_index) {
     return 0;
 }
 
+/**
+ * @brief Thread to split incoming soruce stream into parts.
+ *
+ * The part_thread thread periodically sinks datagrams from the source stream and 
+ * generates parts of these. 
+ *
+ * \param[in] arg The broadcast index used in the thread. Casted to size_t. 
+ */
 int part_thread(void* arg) {
     size_t index = (size_t)arg * 3; 
 
@@ -122,14 +155,14 @@ int main(char argc, char argv[])
     in_part_cbuff[0] = new_cbuff(PART_BUFFER_SIZE);
     send_buffer = new_cbuff(SEND_BUFFER_SIZE);
 
-    /* Setup broadcast struct */
-    bcast[0] = calloc(1, sizeof(struct broadcast));
+    /* Setup broadcast struct */ 
     srand((unsigned int)get_time_deci_ms());
-    bcast[0]->broadcast_id = rand();
-    bcast[0]->broadcast_id += (uint64_t)rand() << 16;
-    bcast[0]->broadcast_id += (uint64_t)rand() << 32;
-    bcast[0]->broadcast_id += (uint64_t)rand() << 48;
-    bcast[0]->broadcast_type = UDPSOCKET_RELAY;
+    bcast[0].broadcast_id = rand();
+    bcast[0].broadcast_id += (uint64_t)rand() << 16;
+    bcast[0].broadcast_id += (uint64_t)rand() << 32;
+    bcast[0].broadcast_id += (uint64_t)rand() << 48;
+    bcast[0].broadcast_type = BROADCAST_TYPE_UDP_DGRM_TIMED;
+    bcast[0].broadcast_subtype = BROADCAST_SUBTYPE_UDP_DGRM_TIMED_DEFAULT;
 
     /* Setup node_tree */
     for (int i = 0; i < 1; i++) {
@@ -145,6 +178,9 @@ int main(char argc, char argv[])
     
     thrd_t ext_udp_rx_thrd;
     thrd_create(&ext_udp_rx_thrd, udp_ext_rx_server_thrd, (void*)broadcast_index);
+
+    thrd_t game_logic_thrd_obj; 
+    thrd_create(&game_logic_thrd_obj, game_logic_thrd, (void*)broadcast_index);
 
     /* Make parts in main thread */
     thrd_t source_part_thrd;

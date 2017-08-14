@@ -30,6 +30,36 @@ void *get_element(struct cbuff *b, size_t i) {
     return mtx_unlock(b->lock), ret;
 }
 
+void *put_element_front(struct cbuff *b, void *el) {
+
+    mtx_lock(b->lock);
+
+    if (!b->first) { /* If buffer is empty */
+        b->mem_start[0] = el;
+        b->first = b->mem_start;
+        b->n_elements++;
+        return mtx_unlock(b->lock), 0;
+    }
+
+    size_t i_end = (b->first - b->mem_start + b->n_elements) % b->mem_size;
+    size_t rel_i = b->first - b->mem_start - 1;
+    size_t i_pre_start = rel_i < 0 ? b->mem_end - b->mem_start : b->first - 1 - b->mem_start;
+
+    /* Check if buffer is full */
+    if (i_end == i_pre_start) {
+        void* ret = b->mem_start[i_pre_start];
+        b->mem_start[i_pre_start] = el;
+        b->first = b->mem_start+i_pre_start;
+        return mtx_unlock(b->lock), ret;
+    }
+    else {
+        b->mem_start[i_pre_start] = el;
+        b->n_elements++;
+        return mtx_unlock(b->lock), 0;
+    }
+
+}
+
 void *put_element(struct cbuff *b, void *el) {
     
     mtx_lock(b->lock); 

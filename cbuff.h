@@ -28,3 +28,5 @@ void* pull_element(struct cbuff *b);
 int is_full(struct cbuff *b);
 /* Free a cbuff */
 void free_cbuff(struct cbuff *b);
+
+void *put_element_front(struct cbuff *b, void *el);
