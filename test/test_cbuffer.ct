@@ -10,11 +10,11 @@ static int test_cbuff() {
 
         struct cbuff* b = new_cbuff(6);
 
-        //% pull_element(b) == 0
+        //% pull_element_front(b) == 0
         //% get_element(b,0) == 0
 
         for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
-            put_element(b, arr + i);
+            put_element_back(b, arr + i);
 
         //% get_element(b,99999) == 0
 
@@ -24,7 +24,7 @@ static int test_cbuff() {
         }
 
         for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++) {
-            int* ans = pull_element(b);
+            int* ans = pull_element_front(b);
             //%  *ans == arr[i]
             //% b->n_elements == sizeof(arr) / sizeof(arr[0]) - i - 1
         }
@@ -37,16 +37,16 @@ static int test_cbuff() {
         struct cbuff* b = new_cbuff(5);
         /* Add 6 ascending integers to wrap */
         for (int i = 0; i < sizeof(arr) / sizeof(arr[0]); i++)
-            put_element(b, arr + i);
+            put_element_back(b, arr + i);
         //% is_full(b) == 1
         for (int i = 0; i < 5; i++) {
             //% *(int*)get_element(b,i) == arr_ans[i]
         }
         for (int i = 0; i < 5; i++) {
-            //% *(int*)pull_element(b) == arr_ans[i]
+            //% *(int*)pull_element_front(b) == arr_ans[i]
             //% b->n_elements == 4 - i
         }
-        //% pull_element(b) == 0
+        //% pull_element_front(b) == 0
         free_cbuff(b);
     }
     return 0; 

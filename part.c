@@ -46,7 +46,7 @@ void make_part(size_t broadcast_index) {
     for (int i = 0; i < n_dgrams; i++) {
         size_t n;
         
-        struct dgram_wrapper *dgw = pull_element(b_in_dgram);
+        struct dgram_wrapper *dgw = pull_element_front(b_in_dgram);
 
         struct part_element_h peh = {
             .element_type = UDP_DGRM_TIMED,
@@ -55,7 +55,7 @@ void make_part(size_t broadcast_index) {
         };
 
         struct part_element_UDP_timed_h peuth = {
-            .src_port = htons(dgw->port),
+            .src_port = htons(dgw->remote_port),
             .trgt_port = htons(dgw->local_port),
             .birth_time = htonll(dgw->time),
             .data_length = htons((uint16_t)dgw->data_length),
@@ -75,7 +75,7 @@ void make_part(size_t broadcast_index) {
         free(dgw);
     }
 
-    struct part *old_part = put_element(b_in_part, part);
+    struct part *old_part = put_element_back(b_in_part, part);
     if (old_part)
         free(old_part);
 }

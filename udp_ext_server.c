@@ -30,7 +30,7 @@ int udp_ext_tx_server_thrd(void* arg) {
         cnd_wait(tx_buffer_sig, tx_buffer_sig_mtx);
         mtx_unlock(tx_buffer_sig_mtx);
 
-        for (struct dgram_wrapper *dw = 0; dw = pull_element(send_buffer);) {
+        for (struct dgram_wrapper *dw = 0; dw = pull_element_front(send_buffer);) {
             send_dgram(dw, index);
             free(dw->data);
             free(dw);
@@ -68,7 +68,7 @@ int udp_ext_rx_server_thrd(void* arg) {
         struct in_addr tmp = { 0 };
         tmp.S_un.S_addr = htonl(dgram->remote_ip);
        /* printf("    from ip    : %s\n", inet_ntoa(tmp));
-        printf("        port: %u\n", dgram->port);
+        printf("        remote_port: %u\n", dgram->remote_port);
         printf(" data length: %llu\n", dgram->data_length);
         if (dgram->data_length && dgram->data[dgram->data_length - 1] == 0)
             printf("        data:\n%s\n", dgram->data);*/

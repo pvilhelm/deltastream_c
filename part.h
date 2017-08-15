@@ -1,3 +1,8 @@
+/** \file
+ *
+ */
+
+
 #pragma once 
 
 #include <stdint.h>
@@ -20,18 +25,19 @@ enum BROADCAST_SUBTYPE {
 };
 
 #ifdef DOXYGEN
-/** @brief A chunk object is container of split or whole control messages and/or smaller part of a part
+/** @brief A chunk object is container of split or whole control messages and/or "smaller parts" of a part.
   *
-  * The chunk struct is only for documentation porpuses and is not acctually used. The subheader and 
-  * data part might be repeated 0 or more times. 
+  * The chunk struct is only for documentation purposes and is not actually used in the code. There are atleast one subheader and 
+  * data pair. The length of the data array might be 0. 
+  *
   */
 struct chunk {
     chunk_header_h chunk_header; ///< The header of the chunk
-    chunk_sub_h sub_header_0; ///< The first subheader
-    char data_0; ///< The data of the corrensponing element
+    chunk_sub_h sub_header_0; ///< The first sub-header
+    char data_0[]; ///< The data of the corresponding element
     /* ... */
-    chunk_sub_h sub_header_n; ///< The n:th subheader
-    char data_n; ///< The data of the corrensponing element
+    chunk_sub_h sub_header_n; ///< The n:th sub-header
+    char data_n[]; ///< The data of the corresponding element
 };
 #endif
 
@@ -69,12 +75,12 @@ struct part_element_UDP_timed_h {
 /**
  * @brief The header of a chunk.
  *
- * A chunk is a generic message sent between nodes that cointans data, control data etc. 
+ * A chunk is a generic message sent between nodes that contains data, control data etc. 
  */
 struct chunk_h {
     uint64_t broadcast_id; ///< The id of the broadcast
-    uint8_t version_nr; ///< Version number of the senders Deltastream implimentation 
-    uint8_t config; ///< Configuration bits for the cunk
+    uint8_t version_nr; ///< Version number of the senders Deltastream implementation 
+    uint8_t config; ///< Configuration bits for the chunk
 };
 
 /**
@@ -86,13 +92,13 @@ enum cunk_types {
     CHUNK_TYPE_CHUNKS, ///< The chunk that contains chunks split over multiple chunks
     CHUNK_TYPE_PING, ///< A ping 
     CHUNK_TYPE_PART_BID, ///< A bid on part(s) 
-    CHUNK_TYPE_PART_BID_CONFIRM, ///< A confirmation of a previospeus bid
-    CHUNK_TYPE_PART_LIST, ///< A list of parts in the senders possetion
+    CHUNK_TYPE_PART_BID_CONFIRM, ///< A confirmation of a previous bid
+    CHUNK_TYPE_PART_LIST, ///< A list of parts in the senders possession
     CHUNK_TYPE_NODE_LIST, ///< A list of nodes in the broadcast 
 };
 
 /**
- * @brief The subheader of each element of a chunk 
+ * @brief The sub-header of each element of a chunk 
  */
 struct chunk_sub_h {
     uint8_t type; ///< The main type of the chunk 
@@ -100,26 +106,50 @@ struct chunk_sub_h {
 };
 
 /** 
- * @brief A subheader of a chunk that contains part data. 
+ * @brief A sub-header of a chunk that contains part data. 
  *
- * The subheader is placed under the chunk header if the part is of type data. 
+ * The sub-header is placed under the chunk header if the part is of type data. 
  */
 struct chunk_part_h { 
     uint16_t chunks_for_part; ///< The number of chunks that the part is made up of 
     uint16_t chunk_nr; ///< The number of this chunk 
 };
 
-struct generic_chunk {
-    struct chunk_h chunk_header;
-    uint16_t size;
-    uint8_t* data;
-};
-
-struct chunk_el_ping {
+/** 
+ * @brief A ping control message.
+ *
+ * For pinging other nodes. Contains its sequence number and the final number. 
+ */
+struct ctrl_msg_ping {
     uint8_t ping_i; ///< The i:th ping in the series of pings. Increased by one each transmission. 
     uint8_t ping_final; ///< The final value of #ping_i
 };
 
-#pragma pack(pop) /* Restore default value of alignement */
+/**
+ * @brief Header for part-list control message.
+ *
+ * Contains option opt, which decides the type of the part-list message.
+ */
+struct ctrl_msg_part_list_h {
+    uint8_t opt; ///< Decides what type of part list it is. 
+};
+
+/** 
+ * @brief A type of part-list message with bit-encoding
+ *
+ * The newest part number corresponds the initial part number
+ * and each following n:th bit marks that the node has the 
+ * (part-number - n):th part, where n is zero-indexed. 
+ * 
+ * I.e. 0x00 00 00 01 0x00 01 b0000 1001
+ * indicates that the node has part 1 and 4. 
+ */
+struct ctrl_msg_part_list_bits_posetive {
+    uint32_t newest_part_nr;
+    uint16_t size_bitfield;
+};
+
+/** @brief Byte alignment reset. */
+#pragma pack(pop) /* Restore default value of alignment */
 
 void make_part(size_t broadcast_id);

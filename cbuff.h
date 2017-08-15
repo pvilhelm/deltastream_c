@@ -21,9 +21,9 @@ struct cbuff* new_cbuff(size_t size);
 /* Get a ptr to i:t element from start (wrappin index) */
 void* get_element(struct cbuff *b, size_t i);
 /* Put a element at the end of the buffer */
-void* put_element(struct cbuff *b, void *el);
+void* put_element_back(struct cbuff *b, void *el);
 /* Retrieve first element */
-void* pull_element(struct cbuff *b);
+void* pull_element_front(struct cbuff *b);
 /* Query if the buffer is full */
 int is_full(struct cbuff *b);
 /* Free a cbuff */

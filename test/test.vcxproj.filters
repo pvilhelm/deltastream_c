@@ -39,9 +39,34 @@
     <ClCompile Include="..\tinycthread\source\tinycthread.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\game_logic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\clock.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\dgram_sink.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\part.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\states.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\udp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\udp_ext_server.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gen\test_game_logic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="test_cbuffer.ct" />
     <None Include="test_node_tree.ct" />
+    <None Include="test_game_logic.ct" />
   </ItemGroup>
 </Project>

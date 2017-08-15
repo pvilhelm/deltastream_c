@@ -106,7 +106,7 @@ int send_dgram(struct dgram_wrapper *dgram, size_t index)
     struct sockaddr_in dest;
     dest.sin_family = AF_INET;
     dest.sin_addr.s_addr = htonl(dgram->remote_ip);
-    dest.sin_port = htons(dgram->port);
+    dest.sin_port = htons(dgram->remote_port);
 
     int res = sendto(udp_socket[index], dgram->data, (int)dgram->data_length, 0, (SOCKADDR *)&dest, sizeof(dest));
     if (res == SOCKET_ERROR) {
@@ -125,7 +125,7 @@ int rx_dgram(struct dgram_wrapper *dgram, size_t index)
     int res = recvfrom((SOCKET)udp_socket[index], dgram->data, DEFAULT_RX_BUFFER_SIZE, 0, (SOCKADDR*) &from, &from_size);
     dgram->time = get_time_deci_ms();
     dgram->remote_ip = ntohl(from.sin_addr.s_addr);
-    dgram->port = ntohs(from.sin_port);
+    dgram->remote_port = ntohs(from.sin_port);
     dgram->local_port = ntohs(local_port[index]);
      
     if (res == SOCKET_ERROR) {

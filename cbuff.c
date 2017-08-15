@@ -60,7 +60,7 @@ void *put_element_front(struct cbuff *b, void *el) {
 
 }
 
-void *put_element(struct cbuff *b, void *el) {
+void *put_element_back(struct cbuff *b, void *el) {
     
     mtx_lock(b->lock); 
 
@@ -88,7 +88,7 @@ void *put_element(struct cbuff *b, void *el) {
      
 }
 
-void *pull_element(struct cbuff *b) {
+void *pull_element_front(struct cbuff *b) {
     mtx_lock(b->lock); 
 
     if (!b->first)

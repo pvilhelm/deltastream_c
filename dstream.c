@@ -74,7 +74,7 @@ int instream_thrd(void *bcast_index) {
         struct in_addr tmp = { 0 };
         tmp.S_un.S_addr = htonl(dgram->remote_ip);
         printf("    from ip    : %s\n", inet_ntoa(tmp));
-        printf("        port: %u\n", dgram->port);
+        printf("        remote_port: %u\n", dgram->remote_port);
         printf(" data length: %llu\n", dgram->data_length);
         if (dgram->data_length && dgram->data[dgram->data_length - 1] == 0)
             printf("        data:\n%s\n", dgram->data);
@@ -98,7 +98,7 @@ int instream_thrd(void *bcast_index) {
 }
 
 /**
- * @brief Thread to split incoming soruce stream into parts.
+ * @brief Thread to split incoming source stream into parts.
  *
  * The part_thread thread periodically sinks datagrams from the source stream and 
  * generates parts of these. 
