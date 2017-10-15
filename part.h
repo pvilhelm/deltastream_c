@@ -8,6 +8,8 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "node.h"
+
 enum ELEMENT_TYPE {
     UDP_DGRM_TIMED = 1,
     UDP_DGRM_UNTIMED,
@@ -105,6 +107,13 @@ struct chunk_sub_h {
     uint16_t size; ///< The size of the element
 };
 
+struct chunk_node_wrapper {
+    uint64_t time;
+    struct node *n;
+    struct chunk_sub_h csh;
+    struct uint8_t *msg;
+};
+
 /** 
  * @brief A sub-header of a chunk that contains part data. 
  *
@@ -131,7 +140,7 @@ struct ctrl_msg_ping {
  * Contains option opt, which decides the type of the part-list message.
  */
 struct ctrl_msg_part_list_h {
-    uint8_t opt; ///< Decides what type of part list it is. 
+    uint8_t opt_bit; ///< Decides what type of part list it is. 
 };
 
 /** 

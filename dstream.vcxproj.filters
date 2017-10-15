@@ -57,6 +57,12 @@
     <ClInclude Include="game_logic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ctrl_msg_ping.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_msg_part_list.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dstream.c">
@@ -93,6 +99,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="states.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_msg_ping.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_msg_part_list.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

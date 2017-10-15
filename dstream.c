@@ -163,6 +163,7 @@ int main(char argc, char argv[])
     bcast[0].broadcast_id += (uint64_t)rand() << 48;
     bcast[0].broadcast_type = BROADCAST_TYPE_UDP_DGRM_TIMED;
     bcast[0].broadcast_subtype = BROADCAST_SUBTYPE_UDP_DGRM_TIMED_DEFAULT;
+    bcast[0].ctrl_msg_buff = new_cbuff(CTRL_MSG_BUFFER_SIZE);
 
     /* Setup node_tree */
     for (int i = 0; i < 1; i++) {

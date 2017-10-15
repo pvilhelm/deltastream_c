@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <stddef.h>
 
+#include "cbuff.h"
+#include "config.h"
+
 #define BROADCAST_TYPE_INVALID 0
 #define BROADCAST_TYPE_UDP_DGRM_TIMED 1
 #define BROADCAST_TYPE_UDP_DGRM_UNTIMED 2
@@ -23,4 +26,6 @@ struct broadcast {
     uint8_t broadcast_subtype; ///< Subtype of broadcast 
     uint64_t broadcast_id; ///< Id of broadcast 
     uint8_t i_am_source; ///< Non zero when this computer is the source of the broadcast 
+
+    struct cbuff *ctrl_msg_buff;
 };

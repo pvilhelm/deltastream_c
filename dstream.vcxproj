@@ -201,6 +201,8 @@
     <ClInclude Include="cbuff.h" />
     <ClInclude Include="clock.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="ctrl_msg_part_list.h" />
+    <ClInclude Include="ctrl_msg_ping.h" />
     <ClInclude Include="dgram_sink.h" />
     <ClInclude Include="dgram_wrapper.h" />
     <ClInclude Include="game_logic.h" />
@@ -216,6 +218,8 @@
     <ClCompile Include="broadcast.h" />
     <ClCompile Include="cbuff.c" />
     <ClCompile Include="clock.c" />
+    <ClCompile Include="ctrl_msg_part_list.c" />
+    <ClCompile Include="ctrl_msg_ping.c" />
     <ClCompile Include="dgram_sink.c" />
     <ClCompile Include="dstream.c" />
     <ClCompile Include="game_logic.c" />

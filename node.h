@@ -9,7 +9,10 @@
 #define NODE_STATE_ACTIVE 1U
 #define NODE_STATE_INACTIVE 0U
 #define NODE_STATE_BANNED 255U
-
+/** @brief A node object (remote Deltastream "client")
+ *
+ * The node object represents a participant in the broadcast. 
+ */
 typedef struct node {
     uint32_t ip;                    /* Stored in host endianess */
     uint16_t port;                  /* Remote port nr */
